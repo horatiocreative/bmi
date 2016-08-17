@@ -1,0 +1,180 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}My Profile{% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('bundles/app/css/s3.upload.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+	<div class="container-fluid content-breather-small" id="breadcrumbs">
+		<div class="container">
+			<div class="row">
+			
+				<div class="col-md-6">
+					<h4>My Account</h4>
+				</div><!-- End of column one -->
+				
+				<div class="col-md-6 text-right">
+					<ol class="breadcrumb">
+						<li><a href="{{ path('homepage') }}">Home</a></li>
+						<li class="active">My account</li>
+					</ol>
+				</div><!-- End of column two -->
+			</div><!-- End of row -->	
+		</div><!-- End of container -->
+	</div><!-- End of fluid container -->
+
+	<div class="container">
+		<div class="row">
+            <div class="col-md-2 nav-sidebar heading-font">
+                <div class="avatar mb10">
+                    <form id="editAvatar" role="form" action="{{ path('update_avatar') }}" method="POST">
+					{% set image = user|get_file('avatar').s3_url|default(asset('bundles/app/images/logo.png')) %}
+					<img src="{{ image }}" alt="" style="width: 100%"/>
+                    <input type="hidden" name="file[avatar]" id="avatar" value="{{ user|get_file('avatar').id|default('') }}" />
+                    <input type="hidden" name="file[delete]" id="old_avatar"  />
+                    <div class="upload-group fileinput-button">
+                        <button class="btn btn-block branding-background btn-sm" style="margin-bottom: 5px;">Update Avatar</button>
+                        <input id="file_avatar" class="s3_upload" style="text-transform: none;cursor:pointer;" type="file" name="file_logo" signUrl = "{{ path('put_s3aws') }}" userCallback="uploadAvatar" accept="image/jpeg,image/png"/>
+                        <div class="upload_status" style="display: none">
+                            <div class="upload_info">
+                                <strong class="upload_name"></strong> -
+                                <span id="id_upload_text" class="upload_text"></span>
+                            </div>
+                            <div class="progress_bar">
+                                <div class="percent">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                    <a class="btn btn-block branding-background btn-sm" href="#modal-editprofile" data-toggle="modal" data-target="#modal-editprofile">Update Profile Info</a>
+	        		{#<button type="submit" id="" class="btn btn-block branding-background btn-sm">Update Profile Info</button>#}
+	        		<button type="submit" id="" class="btn btn-block branding-background btn-sm">Upload KYC Document</button>
+                </div>
+            </div>
+            <div class="col-md-9" style="padding-left: 40px" role="tabpanel">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="overviewTab">
+                        <h1 class="m0 mb10" id="person_name">{% if user.full_name is defined %}{{ user.full_name }}{% endif %}</h1>
+                        <div class="mb20 gray">
+                            <div class=""><i class="glyphicon glyphicon-user"></i> &nbsp;
+								{% if user.additional_type is defined %}{{ user.additional_type }}{% endif %}
+							</div>
+                            <div><i class="fa fa-envelope"></i> &nbsp;
+								{% if user.email is defined and user.email != '(none)' %}{{ user.email }} {% endif %}
+							</div>
+                            <div><i class="fa fa-phone"></i> &nbsp;
+								{% if user.phone_1 is defined and user.phone_1 != '(none)' %}{{ user.phone_1 }} {% endif %}
+							</div>
+                            <div><i class="glyphicon glyphicon-map-marker"></i> &nbsp;
+								{% if user.address is defined %}
+									{{ user.address.building|default('') }}
+									{{ user.address.street_address|default('') }},
+									{{ user.address.region|default('') }},
+									{{ user.address.city|default('') }}
+									{{ user.address.postal_code|default('') }}
+								{% endif %}                                
+							</div>
+                        </div>
+                        <div class="mb20">
+                            <h3 class="heading-font">Biography</h3>
+                            <div class="mb20 gray">
+                                <p class="m0" id="bio_info">
+									{% if user.biography != '' %}
+										{{ user.biography | raw }}
+									{% else %}
+										No biography found
+									{% endif %}
+								</p>
+                            </div>
+                        </div>         
+                        <div class="mb20">
+                            <h3 class="heading-font">Account Information</h3>
+                            <div class="mb20 gray">
+								<b>Date of Birth: </b>{{user.birth_date|date('d/m/Y')|default('No date of birth found') }}<br>
+								<b>Alternative Phone: </b>{{user.phone_2|default('No alternative phone number found') }}<br>
+								<b>Alternative Email: </b>{{ user|get_info('alt_email')|default('No alternative email found') }}<br>
+								<b>National Insurance Number: </b>{{ user.tax_id|default('No National Insurance Number found') }}<br>
+                            </div>
+                        </div>  
+                        <div class="mb20">
+                            <h3 class="heading-font">Investment Preferences</h3>
+                            <div class="mb20 gray">
+								TBC
+                            </div>
+                        </div>                                                                 
+                        <div class=" upload-group">
+                            <h3 class="heading-font">Documents</h3>                        
+                            <div class="mb20">
+								<table class="table table-responsive">
+									<thead>
+									  <tr>
+										<th>Uploaded</th>
+										<th>Type</th>
+										<th>Name</th>
+										<th>Action</th>
+									  </tr>
+									</thead>
+									<tbody>
+										{% for document in documents|default([]) %}
+											{% if document.tag == 'KYC' %}
+												<tr>
+													<td>{{ document.created_at|date('d/m/Y') }}</td>
+													<td>{{ document.tag|default() }}</td>
+													<td>{{ document.file_name|default() }}</td>
+													<td><a class="btn btn-default" href="{{ document.url }}" target="_blank">Download</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div><!-- End of row -->
+
+	</div><!-- End of container -->
+    <!-- begin:modal-edit profile -->
+    <div class="modal fade" id="modal-editprofile" tabindex="-1" role="dialog" aria-labelledby="modal-editprofile" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                {% include 'AppBundle:Profile:edit_profile.html.twig' with {'userInfoForm': userInfoForm} %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/bootstrap-datetimepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/app/js/s3.upload.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.dob').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'en',
+                defaultDate: "1977-8-10"
+            });
+        });
+
+        function uploadAvatar() {
+            var file_logo_json = '{"name":"' + $('#file_avatar').attr('filename')
+                    + '","s3_url":"' + $('#file_avatar').attr('s3_url')
+                    + '"}';
+            if($('#avatar').val() != ""){
+                var delete_avatar = '{\"doc_id\":\"' + $('#avatar').val()
+                        + '\",\"file_delete\":\"1'
+                        + '\"}';
+                $('#old_avatar').val(delete_avatar);
+            }else{
+                $('#old_avatar').remove();
+            }
+            $('#avatar').val(file_logo_json);
+
+            $('#editAvatar').submit();
+        }
+    </script>
+{% endblock %}

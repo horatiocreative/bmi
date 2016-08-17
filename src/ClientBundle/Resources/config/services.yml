@@ -1,0 +1,24 @@
+services:
+     organization:
+        class: ClientBundle\Service\OrganizationService
+        arguments: [@service_container, @session]
+
+     offering:
+        class: ClientBundle\Service\OfferingService
+        arguments: [@service_container, @session]
+
+     document:
+        class: ClientBundle\Service\DocumentService
+        arguments: [@service_container, @session]
+
+     investment:
+        class: ClientBundle\Service\InvestmentService
+        arguments: [@service_container, @session]
+
+     forum:
+        class: ClientBundle\Service\ForumService
+        arguments: [@service_container, @session]
+        
+     deal_room:
+        class: ClientBundle\Service\DealRoomService
+        arguments: [@service_container, @session]

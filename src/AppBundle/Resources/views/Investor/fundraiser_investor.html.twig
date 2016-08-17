@@ -1,0 +1,54 @@
+{% extends 'CVSeismicBundle::seismic_network.html.twig' %}
+
+{% block header %}
+    {% include('CVSeismicBundle:Common:header.html.twig') with { active :'home' } %}
+{% endblock %}
+
+{% block bodyContent %}
+    <div class="container-fluid content-breather-small" id="breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h4>Choose Type of Account</h4>
+                </div><!-- End of column one -->
+                <div class="col-md-6 col-sm-6 text-right">
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('cv_seismic_home', {'network': network.urlname}) }}">Home</a></li>
+                        <li class="active">Entrepreneur - Investor</li>
+                    </ol>
+                </div><!-- End of column two -->
+            </div><!-- End of row -->   
+        </div><!-- End of container -->
+    </div><!-- End of fluid container -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="completeRegistration">
+                    <h2>{% trans %}Choose Type Of Account{% endtrans %}</h2>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a style="padding: 10px 16px;" class="btn btn-primary input-lg" href="{{ path('cv_seismic_complete_registration', {'network': network.urlname}) }}">Entrepreneur</a>
+                            <a style="padding: 10px 16px;" class="btn btn-primary input-lg" href="{{ path('cv_seismic_accreditation', {'network': network.urlname}) }}">Investor</a>
+                        </div>
+                    </div>
+
+                    <div class="status"></div>
+                </div>
+            </div>
+        </div>
+    </div><!-- End of container -->
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/cvseismic/js/bootstrap/bootstrap.js') }}"></script>
+    <script src="{{ asset('bundles/cvseismic/js/css3-animate-it.js') }}"></script>
+    <script src="{{ asset('bundles/cvseismic/js/bootstrap-hover-dropdown.js') }}"></script>
+    <script src="{{ asset('bundles/cvseismic/js/modernizr.js') }}"></script>
+    <script src="{{ asset('bundles/cvseismic/js/Slickform.js') }}"></script>
+    <!-- Google maps api -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7"></script>
+    <script src="{{ asset('bundles/cvseismic/js/maps.js') }}"></script>
+    <script src="{{ asset('bundles/cvseismic/js/scripts.js') }}"></script>
+{% endblock %}

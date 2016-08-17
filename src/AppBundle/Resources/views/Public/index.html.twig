@@ -1,0 +1,68 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid slider">
+		<div id="layerslider" style="width: 100%; height: 350px;">
+    		<div class="ls-slide" data-ls="slidedelay: 10000;"><!-- start of first slide -->
+				<!-- slide background -->
+				<img src="{{asset('bundles/app/images/slider_images/Seismic_Background_Photo.jpg')}}" class="ls-bg bright-img" alt="Slide background">
+				<!-- End of slide background -->
+		
+			</div><!-- End of first slide -->
+      	</div><!-- End of layer slider container -->
+	</div><!-- End of fluid container housing the slider -->
+	
+	<div class="container content-breather">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 animatedParent animateOnce" data-appear-top-offset='-200'>
+				<div class="icon-holder">
+					<div data-icon="&#xe026;" class="icon animated bounceInRight"></div>
+				</div><!-- End of Icon holder -->
+				<h3 class="text-center">Support for Entrepreneurs</h3>
+				<p class="text-center">
+					We assist entrepreneurs in getting their business ideas off the ground, and help them to be investment ready
+				</p>
+			</div><!-- End of column -->
+			<div class="col-md-4 col-sm-4 animatedParent animateOnce" data-appear-top-offset='-200'>
+				<div class="icon-holder">
+					<div data-icon="&#xe032;" class="icon animated bounceInDown"></div>
+				</div><!-- End of Icon holder -->
+				<h3 class="text-center">Support for Investors</h3>
+				<p class="text-center">
+					Our funding platform provides secure access to investor information and your portfolio 
+				</p>
+			</div><!-- End of column -->
+			<div class="col-md-4 col-sm-4 animatedParent animateOnce" data-appear-top-offset='-200'>
+				<div class="icon-holder">
+					<div data-icon="&#xe06f;" class="icon animated bounceInLeft"></div>
+				</div><!-- End of Icon holder -->
+				<h3 class="text-center">Compliance under control</h3>
+				<p class="text-center">
+					We look after all the compliance issues to ensure that investors are accredited in line with FCA regulations and other UK financial requirements
+				</p>
+			</div><!-- End of column -->
+		</div><!-- End of row -->
+	</div><!-- End of container -->	
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function (){
+            var requiredLogin = '{{ required }}';
+            if (requiredLogin === 'login') {
+                // Show login popup
+                $('#modal-login').modal('show');
+            }
+        });
+
+        $(document).ready(function () {
+	        //add editors
+	        $('.featured-company').on('click', function() {
+	        	var location = $(this).attr('data-link-target');
+
+	        	window.location.replace(location);
+	        });
+	    });
+    </script>
+{% endblock %}

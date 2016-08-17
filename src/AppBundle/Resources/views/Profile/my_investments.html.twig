@@ -1,0 +1,124 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid content-breather-small" id="breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h4>My Investments</h4>
+                </div><!-- End of column one -->
+                <div class="col-md-6 col-sm-6 text-right">
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('homepage') }}">Home</a></li>
+                        <li class="active">My Investments</li>
+                    </ol>
+                </div><!-- End of column two -->
+            </div><!-- End of row -->   
+        </div><!-- End of container -->
+    </div><!-- End of fluid container -->
+
+    <div class="container">
+        <div class="row">
+			{% if(investments|length == 0) %}
+                <div style="padding: 15px 30px; background-color: #fdfadf; color: #000 !important; margin-bottom: 30px;">
+                    You currently have no investments. Please check back when you have made an investment to monitor your investments.
+                </div>
+            {% endif %}
+            {% set n = 1 %}
+			{% for investment in investments %}
+                <div class="col-md-4">
+                    <div class="plan-wrap">
+                        <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><a href="{{ path('view_company', { 'offering_id': investment.offering_id }) }}">{{ investment.offering.name }}</a></td>
+                                <td class="text-right">
+									{{ investment.offering.info.tax_scheme|default('EIS') }}
+								</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="dp-table mb10">
+                                        <div class="dp-tablecell">
+                                        <a href="{{ path('view_company', { 'offering_id': investment.offering_id }) }}">
+                                            <img class="img-responsive" src="{{ investment.offering.organization.logo.url|default(asset('bundles/app/images/logo.png')) }}" alt=''/>
+                                        </a>
+                                        </div>
+                                    </div>
+                                    <div class="brief-desc">
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border-top: none">
+                                    <div class="progress" style="margin:0px;">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ investment.offering.raised_percent }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ investment.offering.raised_percent }}%">
+                                            <span>{{ investment.offering.raised_percent }}% Funded</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Raised</td>
+                                <td class="text-right">£ {{ investment.offering.amount_raised|number_format }}</td>
+                            </tr>
+                            <tr>
+                                <td>Target</td>
+                                <td class="text-right">£ {{ investment.offering.funding_goal|number_format }}</td>
+                            </tr>
+                            <tr>
+                                <td>Type</td>
+                                <td class="text-right">{{ investment.offering.additional_type }}</td>
+                            </tr>
+                            <tr>
+                                <td>Sector</td>
+                                <td class="text-right">{{ investment.offering.organization.sector }}</td>
+                            </tr>
+                            <tr>
+                                <td>Equity Offered</td>
+                                <td class="text-right">{{ investment.offering.equity_offered }}%</td>
+                            </tr>
+                            <tr>
+                                <td>My Offer</td>
+                                <td class="text-right">
+                                	{% if investment.investment_amount == 0 %}
+										Expression of Interest
+                                	{% else %}
+                                		£ {{ investment.investment_amount|number_format }}
+                                	{% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Offer Status</td>
+                                <td class="text-right">
+                                    {% if investment.life_cycle_stage == 1 %}
+                                        Rejected
+                                    {% elseif investment.life_cycle_stage == 2 %}
+                                        Approved
+                                    {% elseif investment.life_cycle_stage == 3 %}
+                                        Withdrawn
+                                    {% elseif investment.life_cycle_stage == 4 %}
+                                        Settled
+                                    {% else %}
+                                        Open
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                {% if(n == 3) %}
+                    <div class="col-md-12 divider-line"><span></span></div>
+                    {% set n = 0 %}
+                {% endif %}
+                {% set n = n+1 %}
+            {% endfor %}
+
+        </div>
+        
+    </div><!-- End of container -->
+
+{% endblock %}
